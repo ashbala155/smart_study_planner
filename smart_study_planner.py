@@ -17,7 +17,14 @@ DATA_FILE = "tasks.csv"
 # =========================
 def load_data():
     if os.path.exists(DATA_FILE):
-        return pd.read_csv(DATA_FILE, parse_dates=["Deadline"])
+        df = pd.read_csv(DATA_FILE)
+        
+        # Force proper datetime conversion
+        if "Deadline" in df.columns:
+            df["Deadline"] = pd.to_datetime(df["Deadline"], errors="coerce")
+        
+        return df
+    
     return pd.DataFrame(columns=["Task", "Subject", "Priority", "Deadline", "Completed"])
 
 def save_data(df):
@@ -42,7 +49,7 @@ with st.sidebar.form("add_task"):
             "Task": task,
             "Subject": subject,
             "Priority": priority,
-            "Deadline": deadline,
+            "Deadline": pd.to_datetime(deadline),
             "Completed": False
         }])
         tasks = pd.concat([tasks, new_task], ignore_index=True)
@@ -73,7 +80,13 @@ with tab1:
             with col1:
                 status = "✅" if row["Completed"] else "⬜"
                 st.write(f"{status} **{row['Task']}**")
-                st.caption(f"{row['Subject']} | {row['Priority']} | Due: {row['Deadline'].date()}")
+                due_date = row["Deadline"]
+                if pd.notnull(due_date):
+                    due_text = due_date.strftime("%Y-%m-%d")
+                else:
+                    due_text = "No deadline"
+                
+                st.caption(f"{row['Subject']} | {row['Priority']} | Due: {due_text}"
 
                 # 🔔 Deadline Alerts
                 if not row["Completed"]:
