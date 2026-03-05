@@ -86,7 +86,7 @@ with tab1:
                 else:
                     due_text = "No deadline"
                 
-                st.caption(f"{row['Subject']} | {row['Priority']} | Due: {due_text}"
+                st.caption(f"{row['Subject']} | {row['Priority']} | Due: {due_text}")
 
                 # 🔔 Deadline Alerts
                 if not row["Completed"]:
