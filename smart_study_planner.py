@@ -144,8 +144,6 @@ with tab3:
 
     st.write("Generate a personalized study plan based on your tasks.")
 
-    api_key = st.text_input("Enter OpenAI API Key", type="password")
-
     study_hours = st.number_input("How many hours can you study per day?", min_value=1, max_value=12, value=3)
 
     if st.button("Generate AI Study Plan"):
@@ -155,8 +153,7 @@ with tab3:
         elif tasks.empty:
             st.error("No tasks available.")
         else:
-            client = OpenAI(api_key=api_key)
-
+            client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
             task_summary = tasks[~tasks["Completed"]][["Task","Subject","Priority","Deadline"]].to_string()
 
             prompt = f"""
