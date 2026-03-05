@@ -148,9 +148,7 @@ with tab3:
 
     if st.button("Generate AI Study Plan"):
 
-        if not api_key:
-            st.error("Please enter your OpenAI API key.")
-        elif tasks.empty:
+        if tasks.empty:
             st.error("No tasks available.")
         else:
             client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
